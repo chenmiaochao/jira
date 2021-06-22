@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 // 在函数里，改变传入对象是不好的
-export const isFalsy = (value: any) => (value === 0 ? false : !value);
+export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 //!!两个感叹号 对反求反 转变为布尔值
 
 export const cleanObject = (object: object) => {
@@ -25,8 +25,8 @@ export const useMount = (callback: () => void) => {
     callback();
   }, []);
 };
-
-export const useDebounce = (value: any, delay?: number) => {
+//后面用泛型来规范类型
+export const useDebounce = (value: unknown, delay?: number): any => {
   const [debounceValue, setDebonceValue] = useState(value);
   //每次在value变化以后，设置一个定时器
   useEffect(() => {
