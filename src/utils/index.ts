@@ -1,21 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
+// 为什么结构的object类型会被当作空对象?
+// let a: object;
+// a = () => {};
+// a = new RegExp('');
+
+// let b: { [key: string]: unknown };
+// b = () =>{} // 会报错
 // 在函数里，改变传入对象是不好的
 
 //将0转变为不为false
 export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 //!!两个感叹号 对反求反 转变为布尔值
 
-export const cleanObject = (object: object) => {
+export const isVoid = (value: unknown) =>
+  value === undefined || value === null || value === '';
+
+export const cleanObject = (object: { [key: string]: unknown }) => {
   // Object.assign({}, object)
   const result = { ...object };
   Object.keys(result).forEach((key) => {
-    //@ts-ignore
     const value = result[key];
     //如果value为false，包括undefined unll
     //排除传入值为0的情况
-    if (isFalsy(value)) {
-      //@ts-ignore
+    if (isVoid(value)) {
       delete result[key];
     }
   });
@@ -25,6 +33,8 @@ export const cleanObject = (object: object) => {
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
+    //TODO 依赖项里加上callback会造成无限循环,这个和useCallBack和useMeMo有关系
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
 //后面用泛型来规范类型
