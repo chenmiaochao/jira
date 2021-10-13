@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { Typography } from 'antd';
 import { useProject } from 'utils/project';
 import { useUsers } from 'utils/user';
-import { useDebounce } from 'utils';
+import { useDebounce, useDocumentTitle } from 'utils';
 
 export const ProjectListScreen = () => {
   const [param, setParam] = useState({
@@ -16,6 +16,8 @@ export const ProjectListScreen = () => {
   //取出data, :list 改名list
   const { isLoading, error, data: list } = useProject(debouncedParam);
   const { data: users } = useUsers();
+
+  useDocumentTitle('项目列表', false);
 
   return (
     <Container>
