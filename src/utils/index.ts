@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // 为什么结构的object类型会被当作空对象?
 // let a: object;
@@ -70,7 +70,9 @@ export const useDocumentTitle = (
   title: string,
   keepOnUnmount: boolean = true,
 ) => {
-  const oldTitle = document.title;
+  const oldTitle = useRef(document.title).current;
+  // 页面加载时: 旧title
+  // 加载后: 新title
 
   useEffect(() => {
     document.title = title;
@@ -79,8 +81,9 @@ export const useDocumentTitle = (
   useEffect(() => {
     return () => {
       if (!keepOnUnmount) {
+        // 如果不指定一代, 读到的是oldTitle
         document.title = oldTitle;
       }
     };
-  }, []);
+  }, [keepOnUnmount, oldTitle]);
 };
