@@ -2,7 +2,7 @@ import { FormEvent } from 'react';
 import { useAuth } from 'context/auth-context';
 import { Button, Form, Input } from 'antd';
 import { LongButton } from './index';
-import { useAsync } from 'utils/useAsync';
+import { useAsync } from 'utils/use-async';
 
 export const LoginScreen = ({
   onError,

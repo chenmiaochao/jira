@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { User } from 'screens';
 import { cleanObject } from 'utils';
 import { useHttp } from './http';
-import { useAsync } from './useAsync';
+import { useAsync } from './use-async';
 
 export const useUsers = (param?: Partial<User>) => {
   const client = useHttp();

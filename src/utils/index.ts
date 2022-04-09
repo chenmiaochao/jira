@@ -36,7 +36,7 @@ export const useMount = (callback: () => void) => {
     callback();
     //TODO 依赖项里加上callback会造成无限循环,这个和useCallBack和useMeMo有关系
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [callback]);
 };
 //后面用泛型来规范类型
 export const useDebounce = <V>(value: V, delay?: number) => {
@@ -107,4 +107,21 @@ export const subset = <
     keys.includes(key as K),
   );
   return Object.fromEntries(filteredEntries) as Pick<O, K>;
+};
+
+/**
+ * 返回组件挂在状态,如果还没有挂载或者已经卸载,返回false
+ * 反之返回true
+ */
+export const useMountedRef = () => {
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  return mountedRef;
 };

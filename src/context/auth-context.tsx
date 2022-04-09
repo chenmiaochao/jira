@@ -1,9 +1,15 @@
-import { useState, ReactNode, createContext, useContext } from 'react';
+import {
+  useState,
+  ReactNode,
+  createContext,
+  useContext,
+  useCallback,
+} from 'react';
 import * as auth from 'auth.provider';
 import { User } from 'screens';
 import { http } from 'utils/http';
 import { useMount } from 'utils';
-import { useAsync } from 'utils/useAsync';
+import { useAsync } from 'utils/use-async';
 import { FullPageLoading, FullPageErrorFallback } from 'components/lib';
 
 export interface AuthForm {
@@ -51,9 +57,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => auth.logout().then(() => setUser(null));
 
-  useMount(() => {
-    run(bootstrapUser());
-  });
+  useMount(
+    useCallback(() => {
+      run(bootstrapUser());
+    }, []),
+  );
 
   if (isIdle || isLoading) {
     return <FullPageLoading />;
