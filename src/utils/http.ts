@@ -1,6 +1,7 @@
-import * as auth from "auth.provider";
-import { useAuth } from "context/auth-context";
-import qs from "qs";
+import { useCallback } from 'react';
+import * as auth from 'auth.provider';
+import { useAuth } from 'context/auth-context';
+import qs from 'qs';
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -14,15 +15,15 @@ export const http = async (
   { data, token, headers, ...customConfig }: Config = {},
 ) => {
   const config = {
-    method: "GET",
+    method: 'GET',
     headers: {
-      Authorization: token ? `Bearer ${token}` : "",
-      "Content-Type": data ? "application/json" : "",
+      Authorization: token ? `Bearer ${token}` : '',
+      'Content-Type': data ? 'application/json' : '',
     },
     ...customConfig, //上面默认指定GET，但如果后面传入method就会覆盖
   };
 
-  if (config.method.toUpperCase() === "GET") {
+  if (config.method.toUpperCase() === 'GET') {
     endpoint += `?${qs.stringify(data)}`;
   } else {
     config.body = JSON.stringify(data || {});
@@ -32,7 +33,7 @@ export const http = async (
     if (res.status === 401) {
       await auth.logout();
       window.location.reload();
-      return Promise.reject({ message: "请重新登录" });
+      return Promise.reject({ message: '请重新登录' });
     }
     const data = await res.json();
     if (res.ok) {
@@ -50,8 +51,11 @@ export const http = async (
 export const useHttp = () => {
   const { user } = useAuth();
   // utility type用法：用泛型给它传入一个其它类型，然后utility type对这个类型惊醒某种操作
-  return (...[endpoint, config]: Parameters<typeof http>) =>
-    http(endpoint, { ...config, token: user?.token });
+  return useCallback(
+    (...[endpoint, config]: Parameters<typeof http>) =>
+      http(endpoint, { ...config, token: user?.token }),
+    [user?.token],
+  );
 };
 
 // 联合类型
@@ -84,9 +88,9 @@ type Person = {
 };
 
 const xiaoming: Partial<Person> = { age: 8 };
-const shenMiRen: Omit<Person, "name" | "age"> = {};
+const shenMiRen: Omit<Person, 'name' | 'age'> = {};
 type PersonKeys = keyof Person;
-type PersonOnlyName = Pick<Person, "name">;
+type PersonOnlyName = Pick<Person, 'name'>;
 
 //Partial 的实现
 type Partial<T> = {
